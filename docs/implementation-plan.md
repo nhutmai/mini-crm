@@ -35,16 +35,16 @@ Nguyên tắc làm việc:
 - [x] Cấu hình ReactJS trong Laravel bằng Vite.
 - [x] Tạo entry Blade tối thiểu để mount React.
 - [x] Tạo cấu trúc thư mục React gợi ý:
-  - [x] `resources/js/App.jsx`
-  - [x] `resources/js/pages`
-  - [x] `resources/js/components`
-  - [x] `resources/js/lib`
-  - [x] `resources/js/layouts`
+    - [x] `resources/js/App.jsx`
+    - [x] `resources/js/pages`
+    - [x] `resources/js/components`
+    - [x] `resources/js/lib`
+    - [x] `resources/js/layouts`
 - [x] Cấu hình route fallback hoặc route web để render React app.
 
 ### Người viết dự án sẽ làm
 
-- [ ] Chạy thử:
+- [x] Chạy thử:
 
 ```bash
 composer install
@@ -54,30 +54,30 @@ php artisan serve
 npm run dev
 ```
 
-- [ ] Xác nhận app mở được trên local.
-- [ ] Chỉnh tên app, database `.env` và thông tin môi trường local.
+- [x] Xác nhận app mở được trên local.
+- [x] Chỉnh tên app, database `.env` và thông tin môi trường local.
 
 ## [ ] Phase 2 - Database và model
 
 ### Codex sẽ làm
 
 - [ ] Tạo migration cơ bản cho:
-  - [ ] `users`
-  - [ ] `campaigns`
-  - [ ] `leads`
-  - [ ] `lead_activities`
-  - [ ] `lead_assignments` nếu cần tách lịch sử assign riêng
+    - [ ] `users`
+    - [ ] `campaigns`
+    - [ ] `leads`
+    - [ ] `lead_activities`
+    - [ ] `lead_assignments` nếu cần tách lịch sử assign riêng
 - [ ] Tạo Eloquent model và relationship:
-  - [ ] `User hasMany Campaign`
-  - [ ] `Campaign belongsTo User`
-  - [ ] `Campaign hasMany Lead`
-  - [ ] `Lead belongsTo Campaign`
-  - [ ] `Lead belongsTo User as assignedSales`
-  - [ ] `Lead hasMany LeadActivity`
+    - [ ] `User hasMany Campaign`
+    - [ ] `Campaign belongsTo User`
+    - [ ] `Campaign hasMany Lead`
+    - [ ] `Lead belongsTo Campaign`
+    - [ ] `Lead belongsTo User as assignedSales`
+    - [ ] `Lead hasMany LeadActivity`
 - [ ] Tạo seeder tài khoản mẫu:
-  - [ ] admin
-  - [ ] marketer
-  - [ ] sales
+    - [ ] admin
+    - [ ] marketer
+    - [ ] sales
 
 ### Người viết dự án sẽ làm
 
@@ -99,9 +99,9 @@ npm run dev
 ### Người viết dự án sẽ làm
 
 - [ ] Chốt rule:
-  - [ ] Admin được làm gì.
-  - [ ] Marketer được làm gì.
-  - [ ] Sales được làm gì.
+    - [ ] Admin được làm gì.
+    - [ ] Marketer được làm gì.
+    - [ ] Sales được làm gì.
 - [ ] Chỉnh redirect sau login.
 - [ ] Chỉnh thông báo lỗi đăng nhập.
 
@@ -113,17 +113,17 @@ npm run dev
 - [ ] Tạo route resource trong `web.php`.
 - [ ] Tạo request validation cơ bản nếu cần.
 - [ ] Tạo React page:
-  - [ ] danh sách campaign
-  - [ ] tạo campaign
-  - [ ] sửa campaign
-  - [ ] xem chi tiết campaign
+    - [ ] danh sách campaign
+    - [ ] tạo campaign
+    - [ ] sửa campaign
+    - [ ] xem chi tiết campaign
 
 ### Người viết dự án sẽ làm
 
 - [ ] Viết rule campaign thật:
-  - [ ] marketer chỉ thấy campaign của mình.
-  - [ ] admin thấy tất cả.
-  - [ ] trạng thái campaign được chuyển như thế nào.
+    - [ ] marketer chỉ thấy campaign của mình.
+    - [ ] admin thấy tất cả.
+    - [ ] trạng thái campaign được chuyển như thế nào.
 - [ ] Chỉnh form field đúng yêu cầu.
 
 ## [ ] Phase 5 - Lead module
@@ -136,26 +136,26 @@ npm run dev
 - [ ] Tạo form tạo/sửa lead.
 - [ ] Tạo public form gửi lead.
 - [ ] Tạo React page:
-  - [ ] danh sách lead
-  - [ ] chi tiết lead
-  - [ ] form public lead
+    - [ ] danh sách lead
+    - [ ] chi tiết lead
+    - [ ] form public lead
 
 ### Người viết dự án sẽ làm
 
 - [ ] Viết core xử lý lead:
-  - [ ] validate phone/email.
-  - [ ] chống trùng lead nếu cần.
-  - [ ] tự gắn campaign/source.
-  - [ ] trạng thái ban đầu của lead.
-  - [ ] rule marketer/sales xem lead.
+    - [ ] validate phone/email.
+    - [ ] chống trùng lead nếu cần.
+    - [ ] tự gắn campaign/source.
+    - [ ] trạng thái ban đầu của lead.
+    - [ ] rule marketer/sales xem lead.
 
 ## [ ] Phase 6 - Assign lead và cập nhật trạng thái
 
 ### Codex sẽ làm
 
 - [ ] Tạo route:
-  - [ ] `PATCH /leads/{lead}/assign`
-  - [ ] `PATCH /leads/{lead}/status`
+    - [ ] `PATCH /leads/{lead}/assign`
+    - [ ] `PATCH /leads/{lead}/status`
 - [ ] Tạo controller/action khung.
 - [ ] Tạo UI chọn sales để assign lead.
 - [ ] Tạo UI sales cập nhật trạng thái lead và ghi chú.
@@ -163,10 +163,10 @@ npm run dev
 ### Người viết dự án sẽ làm
 
 - [ ] Chốt core rule:
-  - [ ] ai được assign lead.
-  - [ ] lead đã converted/lost có được assign lại không.
-  - [ ] assign có tự đổi status sang `assigned` không.
-  - [ ] sales được đổi sang những trạng thái nào.
+    - [ ] ai được assign lead.
+    - [ ] lead đã converted/lost có được assign lại không.
+    - [ ] assign có tự đổi status sang `assigned` không.
+    - [ ] sales được đổi sang những trạng thái nào.
 
 ## [ ] Phase 7 - Lead activity và lịch sử xử lý
 
@@ -179,11 +179,11 @@ npm run dev
 ### Người viết dự án sẽ làm
 
 - [ ] Chốt loại activity:
-  - [ ] note
-  - [ ] call
-  - [ ] status_change
-  - [ ] assignment
-  - [ ] meeting
+    - [ ] note
+    - [ ] call
+    - [ ] status_change
+    - [ ] assignment
+    - [ ] meeting
 - [ ] Chốt nội dung nào cần lưu để truy vết.
 
 ## [ ] Phase 8 - Dashboard/report
@@ -192,11 +192,11 @@ npm run dev
 
 - [ ] Tạo `ReportController`.
 - [ ] Tạo query tổng quan:
-  - [ ] tổng lead
-  - [ ] lead mới
-  - [ ] lead đã chuyển đổi
-  - [ ] lead theo status
-  - [ ] lead theo campaign
+    - [ ] tổng lead
+    - [ ] lead mới
+    - [ ] lead đã chuyển đổi
+    - [ ] lead theo status
+    - [ ] lead theo campaign
 - [ ] Tạo React dashboard cơ bản.
 
 ### Người viết dự án sẽ làm
@@ -210,17 +210,17 @@ npm run dev
 ### Codex sẽ làm
 
 - [ ] Tạo layout chung:
-  - [ ] sidebar/nav
-  - [ ] header
-  - [ ] loading state
-  - [ ] empty state
-  - [ ] error state
+    - [ ] sidebar/nav
+    - [ ] header
+    - [ ] loading state
+    - [ ] empty state
+    - [ ] error state
 - [ ] Tạo component dùng lại:
-  - [ ] table
-  - [ ] form input
-  - [ ] status badge
-  - [ ] modal confirm
-  - [ ] pagination
+    - [ ] table
+    - [ ] form input
+    - [ ] status badge
+    - [ ] modal confirm
+    - [ ] pagination
 
 ### Người viết dự án sẽ làm
 
@@ -240,12 +240,12 @@ npm run dev
 ### Người viết dự án sẽ làm
 
 - [ ] Test luồng nghiệp vụ chính:
-  - [ ] Admin đăng nhập.
-  - [ ] Marketer tạo campaign.
-  - [ ] Lead được gửi từ public form.
-  - [ ] Admin hoặc marketer assign lead cho sales.
-  - [ ] Sales cập nhật trạng thái và ghi chú.
-  - [ ] Admin xem dashboard.
+    - [ ] Admin đăng nhập.
+    - [ ] Marketer tạo campaign.
+    - [ ] Lead được gửi từ public form.
+    - [ ] Admin hoặc marketer assign lead cho sales.
+    - [ ] Sales cập nhật trạng thái và ghi chú.
+    - [ ] Admin xem dashboard.
 - [ ] Chỉnh logic cuối cùng theo yêu cầu thật.
 
 ## Checklist MVP

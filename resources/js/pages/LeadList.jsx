@@ -1,31 +1,17 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { api, queryString } from '../lib/api.js';
+import React, { useState } from 'react';
+import { Link, router, usePage } from '@inertiajs/react';
+import AppLayout from '../layouts/AppLayout.jsx';
 import {
-    Alert,
     Button,
     Card,
     EmptyState,
     Field,
-    LinkButton,
     Pagination,
     Select,
     StatusBadge,
     TextInput,
     formatDate,
 } from '../components/ui.jsx';
-
-function initialFilters() {
-    const params = new URLSearchParams(window.location.search);
-
-    return {
-        status: params.get('status') || '',
-        campaign_id: params.get('campaign_id') || '',
-        assigned_to: params.get('assigned_to') || '',
-        source: params.get('source') || '',
-        keyword: params.get('keyword') || '',
-        page: Number(params.get('page') || 1),
-    };
-}
 
 const blankFilters = {
     status: '',
@@ -37,45 +23,57 @@ const blankFilters = {
 };
 
 export default function LeadList() {
-    const [filters, setFilters] = useState(initialFilters);
-    const [payload, setPayload] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+    const { leads: paginator, meta, query } = usePage().props;
+    const [filters, setFilters] = useState({
+        status: query?.status || '',
+        campaign_id: query?.campaign_id || '',
+        assigned_to: query?.assigned_to || '',
+        source: query?.source || '',
+        keyword: query?.keyword || '',
+        page: Number(query?.page || 1),
+    });
 
-    const params = useMemo(() => queryString({ ...filters, limit: 10 }), [filters]);
-
-    useEffect(() => {
-        let mounted = true;
-        setLoading(true);
-        setError('');
-
-        api(`/leads${params}`)
-            .then((data) => mounted && setPayload(data))
-            .catch((error) => mounted && setError(error.message))
-            .finally(() => mounted && setLoading(false));
-
-        return () => {
-            mounted = false;
-        };
-    }, [params]);
-
-    const paginator = payload?.data;
     const leads = paginator?.data || [];
-    const meta = payload?.meta || {};
     const hasFilters = Object.entries(filters).some(([key, value]) => key !== 'page' && value);
 
+    function visit(nextFilters) {
+        router.get('/leads', { ...nextFilters, limit: 10 }, {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+        });
+    }
+
     function updateFilter(key, value) {
-        setFilters((current) => ({ ...current, [key]: value, page: 1 }));
+        const nextFilters = { ...filters, [key]: value, page: 1 };
+        setFilters(nextFilters);
+        visit(nextFilters);
+    }
+
+    function clearFilters() {
+        setFilters(blankFilters);
+        visit(blankFilters);
+    }
+
+    function changePage(page) {
+        const nextFilters = { ...filters, page };
+        setFilters(nextFilters);
+        visit(nextFilters);
     }
 
     return (
-        <div className="space-y-6">
+        <AppLayout>
+            <div className="space-y-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                     <p className="text-sm font-medium text-[#626260]">Lead workspace</p>
                     <h1 className="mt-1 text-3xl font-medium tracking-[-0.4px] text-[#111111]">Leads</h1>
                 </div>
-                {meta.permissions?.create ? <LinkButton href="/public/leads">New Lead</LinkButton> : null}
+                {meta.permissions?.create ? (
+                    <Link className="inline-flex items-center justify-center rounded-lg bg-[#111111] px-[18px] py-2.5 text-sm font-medium text-white transition hover:bg-black" href="/public/leads">
+                        New Lead
+                    </Link>
+                ) : null}
             </div>
 
             <Card className="p-4">
@@ -122,12 +120,10 @@ export default function LeadList() {
                 </div>
                 {hasFilters ? (
                     <div className="mt-4">
-                        <Button variant="secondary" onClick={() => setFilters(blankFilters)}>Clear filters</Button>
+                        <Button variant="secondary" onClick={clearFilters}>Clear filters</Button>
                     </div>
                 ) : null}
             </Card>
-
-            {error ? <Alert tone="error">{error}</Alert> : null}
 
             <Card className="overflow-hidden">
                 <div className="overflow-x-auto">
@@ -145,9 +141,7 @@ export default function LeadList() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-[#ebe6df] bg-white">
-                            {loading ? (
-                                <tr><td className="px-4 py-8 text-[#626260]" colSpan="8">Loading leads...</td></tr>
-                            ) : leads.length ? leads.map((lead) => (
+                            {leads.length ? leads.map((lead) => (
                                 <tr key={lead.id} className="align-top">
                                     <td className="px-4 py-4 font-medium text-[#111111]">{lead.full_name}</td>
                                     <td className="px-4 py-4 text-[#626260]">
@@ -160,16 +154,16 @@ export default function LeadList() {
                                     <td className="px-4 py-4 text-[#626260]">{lead.source}</td>
                                     <td className="px-4 py-4 text-[#626260]">{formatDate(lead.created_at)}</td>
                                     <td className="px-4 py-4 text-right">
-                                        <a className="font-medium text-[#111111] underline-offset-4 hover:underline" href={`/leads/${lead.id}`}>
+                                        <Link className="font-medium text-[#111111] underline-offset-4 hover:underline" href={`/leads/${lead.id}`}>
                                             View
-                                        </a>
+                                        </Link>
                                     </td>
                                 </tr>
                             )) : null}
                         </tbody>
                     </table>
                 </div>
-                {!loading && !leads.length ? (
+                {!leads.length ? (
                     <EmptyState
                         title={hasFilters ? 'No leads match these filters' : 'No leads yet'}
                         description={hasFilters ? 'Adjust the filters or search term to broaden the list.' : 'New public form submissions and manually created leads will appear here.'}
@@ -178,9 +172,10 @@ export default function LeadList() {
                 <Pagination
                     page={paginator?.current_page || 1}
                     lastPage={paginator?.last_page || 1}
-                    onPage={(page) => setFilters((current) => ({ ...current, page }))}
+                    onPage={changePage}
                 />
             </Card>
-        </div>
+            </div>
+        </AppLayout>
     );
 }

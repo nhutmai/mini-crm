@@ -7,7 +7,7 @@ This file is the default working guide for Codex in this repository. Read it bef
 - This is a mini CRM for lead management.
 - Backend is PHP Laravel.
 - Routes are declared in `routes/web.php`.
-- Frontend is React inside the Laravel source, built with Vite.
+- Frontend is React rendered through Inertia.js inside the Laravel source, built with Vite.
 - Keep the project simple, readable, and scoped to a mini CRM.
 
 ## Required Reading
@@ -25,7 +25,9 @@ Before changing architecture, modules, roles, or business flow:
 Before changing routes, controllers, request/response contracts, or JSON behavior:
 
 - Read `docs/architecture/api-design.md`.
-- Keep routes in `routes/web.php` unless the documentation is intentionally changed.
+- Keep page routes and form actions in `routes/web.php` unless the documentation is intentionally changed.
+- Prefer `Inertia::render()` for page responses and `redirect()->back()` / named redirects for page-level form actions.
+- Keep `response()->json()` only for data-only endpoints such as autocomplete, live search, upload progress, or auth/user probes.
 - Protected write requests must respect Laravel session auth and CSRF.
 
 Before changing migrations, models, relationships, seeders, filters, or reporting data:

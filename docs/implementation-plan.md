@@ -2,7 +2,7 @@
 
 ## Mục tiêu
 
-File này dùng để chia việc giữa người viết dự án và Codex trong quá trình triển khai CRM mini. Dự án dùng PHP Laravel, route chính trong `routes/web.php`, ReactJS đặt trực tiếp trong source Laravel và build bằng Vite.
+File này dùng để chia việc giữa người viết dự án và Codex trong quá trình triển khai CRM mini. Dự án dùng PHP Laravel, route chính trong `routes/web.php`, ReactJS đặt trực tiếp trong source Laravel, render qua Inertia.js và build bằng Vite.
 
 Nguyên tắc làm việc:
 

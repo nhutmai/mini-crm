@@ -2,12 +2,14 @@
 
 ## Mục tiêu
 
-Tài liệu này mô tả hợp đồng route/controller cho hệ thống CRM mini. Dự án dùng PHP Laravel, khai báo route trong `routes/web.php` và dùng ReactJS trực tiếp trong source Laravel. Vì vậy các route dưới đây nên hiểu là web routes dùng session, middleware `auth`, CSRF và controller Laravel, không phải API tách riêng trong `routes/api.php`.
+Tài liệu này mô tả hợp đồng route/controller cho hệ thống CRM mini. Dự án dùng PHP Laravel, khai báo route trong `routes/web.php` và dùng ReactJS qua Inertia.js trực tiếp trong source Laravel. Vì vậy các route dưới đây nên hiểu là web routes dùng session, middleware `auth`, CSRF, Inertia responses và controller Laravel, không phải API tách riêng trong `routes/api.php`.
 
 ## Quy ước chung
 
 - Route khai báo trong `routes/web.php`.
-- Các request từ React có thể nhận JSON response để cập nhật UI không cần reload trang.
+- Page routes trả về `Inertia::render(...)` với props cho React page.
+- Page-level form actions dùng redirect back hoặc named redirect để Inertia refresh props.
+- Chỉ giữ JSON response cho data-only endpoint, ví dụ autocomplete, live search, upload progress hoặc user probe.
 - Các route quản trị cần đăng nhập, trừ public form.
 - Laravel controller/middleware/policy phải kiểm tra quyền theo role ở mọi endpoint cần bảo vệ.
 - Các request `POST`, `PATCH`, `PUT`, `DELETE` cần gửi CSRF token.

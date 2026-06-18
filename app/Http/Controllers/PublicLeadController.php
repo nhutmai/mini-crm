@@ -4,35 +4,33 @@ namespace App\Http\Controllers;
 
 use App\Models\Campaign;
 use App\Models\Lead;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PublicLeadController extends Controller
 {
-    public function campaign(?Campaign $campaign = null): JsonResponse
+    public function create(?Campaign $campaign = null): Response
     {
+        $campaignError = null;
+
         if ($campaign && $campaign->status !== 'active') {
-            return response()->json([
-                'message' => 'This campaign is not accepting new leads right now.',
-                'campaign' => [
-                    'id' => $campaign->id,
-                    'name' => $campaign->name,
-                    'status' => $campaign->status,
-                ],
-            ], 409);
+            $campaignError = 'This campaign is not accepting new leads right now.';
         }
 
-        return response()->json([
+        return Inertia::render('PublicLeadForm', [
             'campaign' => $campaign ? [
                 'id' => $campaign->id,
                 'name' => $campaign->name,
                 'source' => $campaign->source,
                 'status' => $campaign->status,
             ] : null,
+            'campaignError' => $campaignError,
         ]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'campaign_id' => ['nullable', 'integer', 'exists:campaigns,id'],
@@ -48,9 +46,7 @@ class PublicLeadController extends Controller
             : null;
 
         if ($campaign && $campaign->status !== 'active') {
-            return response()->json([
-                'message' => 'This campaign is not accepting new leads right now.',
-            ], 409);
+            return redirect()->back()->with('error', 'This campaign is not accepting new leads right now.');
         }
 
         $lead = Lead::create([
@@ -69,9 +65,6 @@ class PublicLeadController extends Controller
             'content' => 'Lead submitted from public form.',
         ]);
 
-        return response()->json([
-            'message' => 'Thank you! We received your information and will contact you soon.',
-            'lead_id' => $lead->id,
-        ], 201);
+        return redirect()->back()->with('success', 'Thank you! We received your information and will contact you soon.');
     }
 }

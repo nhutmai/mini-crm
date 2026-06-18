@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { api } from '../lib/api.js';
+import React from 'react';
+import { useForm, usePage } from '@inertiajs/react';
 import { Alert, Button, Card, Field, TextArea, TextInput, firstError } from '../components/ui.jsx';
 
 const initialForm = {
@@ -10,52 +10,23 @@ const initialForm = {
     need: '',
 };
 
-export default function PublicLeadForm({ campaignId }) {
-    const [campaign, setCampaign] = useState(null);
-    const [campaignError, setCampaignError] = useState('');
-    const [form, setForm] = useState(initialForm);
-    const [errors, setErrors] = useState({});
-    const [success, setSuccess] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
+export default function PublicLeadForm() {
+    const { campaign, campaignError, flash } = usePage().props;
+    const form = useForm({
+        ...initialForm,
+        campaign_id: campaign?.id || null,
+    });
 
-    useEffect(() => {
-        if (!campaignId) {
-            return;
-        }
-
-        api(`/public-lead-campaign/${campaignId}`)
-            .then((data) => setCampaign(data.campaign))
-            .catch((error) => {
-                setCampaign(error.payload?.campaign || null);
-                setCampaignError(error.message);
-            });
-    }, [campaignId]);
-
-    function updateField(key, value) {
-        setForm((current) => ({ ...current, [key]: value }));
-    }
-
-    async function submit(event) {
+    function submit(event) {
         event.preventDefault();
-        setSubmitting(true);
-        setErrors({});
-
-        try {
-            await api('/public/leads', {
-                method: 'POST',
-                body: JSON.stringify({
-                    ...form,
-                    campaign_id: campaign?.id || campaignId || null,
-                }),
-            });
-            setSuccess(true);
-        } catch (error) {
-            setErrors(error.errors || {});
-            setCampaignError(error.status === 409 ? error.message : '');
-        } finally {
-            setSubmitting(false);
-        }
+        form.post('/public/leads', {
+            preserveScroll: true,
+            onSuccess: () => form.reset('full_name', 'email', 'phone', 'company', 'need'),
+        });
     }
+
+    const success = flash?.success;
+    const error = flash?.error || campaignError;
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-[#f5f1ec] px-4 py-10 text-[#111111]">
@@ -78,50 +49,50 @@ export default function PublicLeadForm({ campaignId }) {
                             </p>
                         </div>
 
-                        {campaignError ? <div className="mt-5"><Alert tone="error">{campaignError}</Alert></div> : null}
+                        {error ? <div className="mt-5"><Alert tone="error">{error}</Alert></div> : null}
 
-                        {!campaignError ? (
+                        {!error ? (
                             <form className="mt-6 grid gap-4" onSubmit={submit}>
-                                <Field label="Name" error={firstError(errors, 'full_name')}>
+                                <Field label="Name" error={firstError(form.errors, 'full_name')}>
                                     <TextInput
-                                        value={form.full_name}
-                                        onChange={(event) => updateField('full_name', event.target.value)}
+                                        value={form.data.full_name}
+                                        onChange={(event) => form.setData('full_name', event.target.value)}
                                         placeholder="Your name"
                                     />
                                 </Field>
                                 <div className="grid gap-4 sm:grid-cols-2">
-                                    <Field label="Email" error={firstError(errors, 'email')}>
+                                    <Field label="Email" error={firstError(form.errors, 'email')}>
                                         <TextInput
                                             type="email"
-                                            value={form.email}
-                                            onChange={(event) => updateField('email', event.target.value)}
+                                            value={form.data.email}
+                                            onChange={(event) => form.setData('email', event.target.value)}
                                             placeholder="you@example.com"
                                         />
                                     </Field>
-                                    <Field label="Phone" error={firstError(errors, 'phone')}>
+                                    <Field label="Phone" error={firstError(form.errors, 'phone')}>
                                         <TextInput
-                                            value={form.phone}
-                                            onChange={(event) => updateField('phone', event.target.value)}
+                                            value={form.data.phone}
+                                            onChange={(event) => form.setData('phone', event.target.value)}
                                             placeholder="Phone number"
                                         />
                                     </Field>
                                 </div>
-                                <Field label="Company" error={firstError(errors, 'company')}>
+                                <Field label="Company" error={firstError(form.errors, 'company')}>
                                     <TextInput
-                                        value={form.company}
-                                        onChange={(event) => updateField('company', event.target.value)}
+                                        value={form.data.company}
+                                        onChange={(event) => form.setData('company', event.target.value)}
                                         placeholder="Company name"
                                     />
                                 </Field>
-                                <Field label="What do you need?" error={firstError(errors, 'need')}>
+                                <Field label="What do you need?" error={firstError(form.errors, 'need')}>
                                     <TextArea
-                                        value={form.need}
-                                        onChange={(event) => updateField('need', event.target.value)}
+                                        value={form.data.need}
+                                        onChange={(event) => form.setData('need', event.target.value)}
                                         placeholder="Tell us a little about your request"
                                     />
                                 </Field>
                                 <div>
-                                    <Button disabled={submitting}>{submitting ? 'Submitting...' : 'Submit'}</Button>
+                                    <Button disabled={form.processing}>{form.processing ? 'Submitting...' : 'Submit'}</Button>
                                 </div>
                             </form>
                         ) : null}

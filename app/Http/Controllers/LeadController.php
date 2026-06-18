@@ -6,13 +6,15 @@ use App\Models\Campaign;
 use App\Models\Lead;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class LeadController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): Response
     {
         $validated = $request->validate([
             'status' => ['nullable', Rule::in(Lead::STATUSES)],
@@ -46,18 +48,26 @@ class LeadController extends Controller
 
         $leads = $query->paginate($validated['limit'] ?? 10)->withQueryString();
 
-        return response()->json([
-            'data' => $leads->through(fn (Lead $lead) => $this->leadSummary($lead)),
+        return Inertia::render('LeadList', [
+            'leads' => $leads->through(fn (Lead $lead) => $this->leadSummary($lead)),
             'meta' => [
                 'filters' => $this->leadFilters($request),
                 'permissions' => [
                     'create' => $this->canCreateLead($request->user()),
                 ],
             ],
+            'query' => [
+                'status' => $validated['status'] ?? '',
+                'campaign_id' => $validated['campaign_id'] ?? '',
+                'assigned_to' => $validated['assigned_to'] ?? '',
+                'source' => $validated['source'] ?? '',
+                'keyword' => $validated['keyword'] ?? '',
+                'page' => $validated['page'] ?? 1,
+            ],
         ]);
     }
 
-    public function show(Request $request, Lead $lead): JsonResponse
+    public function show(Request $request, Lead $lead): Response
     {
         abort_unless($this->canViewLead($request->user(), $lead), 403);
 
@@ -68,8 +78,8 @@ class LeadController extends Controller
             'activities.user:id,name,email,role',
         ]);
 
-        return response()->json([
-            'data' => $this->leadDetail($lead),
+        return Inertia::render('LeadDetail', [
+            'lead' => $this->leadDetail($lead),
             'meta' => [
                 'statuses' => Lead::STATUSES,
                 'sales' => $this->salesOptions(),
@@ -84,7 +94,7 @@ class LeadController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request, Lead $lead): JsonResponse
+    public function updateStatus(Request $request, Lead $lead): RedirectResponse
     {
         abort_unless($this->canUpdateLead($request->user(), $lead), 403);
 
@@ -104,10 +114,10 @@ class LeadController extends Controller
             'new_status' => $lead->status,
         ]);
 
-        return $this->show($request, $lead->refresh());
+        return redirect()->back()->with('success', 'Status updated.');
     }
 
-    public function assign(Request $request, Lead $lead): JsonResponse
+    public function assign(Request $request, Lead $lead): RedirectResponse
     {
         abort_unless($this->canAssignLead($request->user(), $lead), 403);
 
@@ -127,10 +137,10 @@ class LeadController extends Controller
             'content' => 'Assigned to '.$sales->name.'.',
         ]);
 
-        return $this->show($request, $lead->refresh());
+        return redirect()->back()->with('success', 'Lead assigned.');
     }
 
-    public function storeActivity(Request $request, Lead $lead): JsonResponse
+    public function storeActivity(Request $request, Lead $lead): RedirectResponse
     {
         abort_unless($this->canUpdateLead($request->user(), $lead), 403);
 
@@ -144,7 +154,7 @@ class LeadController extends Controller
             'content' => $validated['content'],
         ]);
 
-        return $this->show($request, $lead->refresh());
+        return redirect()->back()->with('success', 'Note added.');
     }
 
     private function leadFilters(Request $request): array

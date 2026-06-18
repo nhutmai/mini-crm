@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Campaign;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class CampaignController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): Response
     {
         $validated = $request->validate([
             'status' => ['nullable', Rule::in(Campaign::STATUSES)],
@@ -35,8 +37,8 @@ class CampaignController extends Controller
 
         $campaigns = $query->paginate($validated['limit'] ?? 10)->withQueryString();
 
-        return response()->json([
-            'data' => $campaigns->through(fn (Campaign $campaign) => $this->campaignSummary($campaign, $request->user())),
+        return Inertia::render('CampaignList', [
+            'campaigns' => $campaigns->through(fn (Campaign $campaign) => $this->campaignSummary($campaign, $request->user())),
             'meta' => [
                 'filters' => [
                     'statuses' => Campaign::STATUSES,
@@ -46,10 +48,16 @@ class CampaignController extends Controller
                     'create' => $this->canCreateCampaign($request->user()),
                 ],
             ],
+            'query' => [
+                'status' => $validated['status'] ?? '',
+                'source' => $validated['source'] ?? '',
+                'keyword' => $validated['keyword'] ?? '',
+                'page' => $validated['page'] ?? 1,
+            ],
         ]);
     }
 
-    public function updateStatus(Request $request, Campaign $campaign): JsonResponse
+    public function updateStatus(Request $request, Campaign $campaign): RedirectResponse
     {
         abort_unless($this->canManageCampaign($request->user(), $campaign), 403);
 
@@ -59,21 +67,16 @@ class CampaignController extends Controller
 
         $campaign->update(['status' => $validated['status']]);
 
-        return response()->json([
-            'message' => 'Campaign status updated.',
-            'campaign' => $campaign->fresh(),
-        ]);
+        return redirect()->back()->with('success', 'Campaign status updated.');
     }
 
-    public function destroy(Request $request, Campaign $campaign): JsonResponse
+    public function destroy(Request $request, Campaign $campaign): RedirectResponse
     {
         abort_unless((bool) ($request->user()?->isAdmin()), 403);
 
         $campaign->delete();
 
-        return response()->json([
-            'message' => 'Campaign deleted.',
-        ]);
+        return redirect()->route('campaigns.index')->with('success', 'Campaign deleted.');
     }
 
     private function campaignSummary(Campaign $campaign, ?User $user): array

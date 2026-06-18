@@ -2,7 +2,7 @@
 
 ## Mục tiêu
 
-Hệ thống CRM mini giúp gom lead từ nhiều chiến dịch marketing về một nơi, phân công lead cho sales và theo dõi quá trình xử lý. Dự án dùng PHP Laravel làm ứng dụng chính, route khai báo trong `routes/web.php`, ReactJS đặt trực tiếp trong source Laravel để xây dựng giao diện.
+Hệ thống CRM mini giúp gom lead từ nhiều chiến dịch marketing về một nơi, phân công lead cho sales và theo dõi quá trình xử lý. Dự án dùng PHP Laravel làm ứng dụng chính, route khai báo trong `routes/web.php`, ReactJS đặt trực tiếp trong source Laravel và render qua Inertia.js để xây dựng giao diện.
 
 ## Người dùng chính
 
@@ -13,8 +13,8 @@ Hệ thống CRM mini giúp gom lead từ nhiều chiến dịch marketing về 
 
 ## Thành phần hệ thống
 
-- Laravel Web App: ứng dụng chính, xử lý route trong `routes/web.php`, controller, middleware, validation và business logic.
-- ReactJS trong source Laravel: giao diện đăng nhập, dashboard, quản lý campaign, quản lý lead, workspace cho sales và public form. React có thể đặt trong `resources/js` và build bằng Vite.
+- Laravel Web App: ứng dụng chính, xử lý route trong `routes/web.php`, controller, middleware, validation, Inertia page responses và business logic.
+- ReactJS + Inertia.js trong source Laravel: giao diện đăng nhập, dashboard, quản lý campaign, quản lý lead, workspace cho sales và public form. React đặt trong `resources/js/pages` và build bằng Vite.
 - Database: lưu users, campaigns, leads, assignments và lead activities.
 - Auth module: xác thực người dùng và phân quyền theo role.
 - Report module: tổng hợp số liệu lead theo campaign, sales và trạng thái.
@@ -105,14 +105,14 @@ Controller gợi ý: `ReportController`.
 
 ## Cấu trúc Laravel gợi ý
 
-- `routes/web.php`: khai báo route cho toàn bộ trang React và các action xử lý dữ liệu.
+- `routes/web.php`: khai báo route cho toàn bộ trang Inertia React và các action xử lý dữ liệu.
 - `app/Http/Controllers`: chứa controller cho auth, campaign, lead, assignment, report.
 - `app/Models`: chứa model `User`, `Campaign`, `Lead`, `LeadActivity`.
 - `app/Policies` hoặc middleware role: kiểm tra quyền theo admin, marketer, sales.
 - `database/migrations`: định nghĩa schema database.
 - `database/seeders`: tạo tài khoản mẫu admin, marketer, sales.
-- `resources/js`: chứa source ReactJS.
-- `resources/views`: chỉ cần một Blade entry point để mount React nếu dùng React SPA trong Laravel.
+- `resources/js`: chứa source ReactJS, Inertia bootstrap và page components.
+- `resources/views`: chỉ cần một Blade entry point có `@inertia`.
 - `vite.config.js`: cấu hình build React asset.
 
 ## Luồng nghiệp vụ tổng quát

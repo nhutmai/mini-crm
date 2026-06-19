@@ -28,11 +28,7 @@ export function PageHeader({ title, eyebrow, action }) {
 }
 
 export function Card({ children, className = '' }) {
-    return (
-        <section className={`rounded-xl border border-[#d3cec6] bg-white ${className}`}>
-            {children}
-        </section>
-    );
+    return <section className={`rounded-xl border border-[#d3cec6] bg-white ${className}`}>{children}</section>;
 }
 
 export function Button({ children, variant = 'primary', className = '', ...props }) {
@@ -113,7 +109,9 @@ export function StatusBadge({ status, type = 'lead' }) {
     const classes = type === 'campaign' ? campaignStatusClasses : leadStatusClasses;
 
     return (
-        <span className={`inline-flex rounded-md border px-2.5 py-1 text-xs font-medium capitalize ${classes[status] || classes.new || classes.draft}`}>
+        <span
+            className={`inline-flex rounded-md border px-2.5 py-1 text-xs font-medium capitalize ${classes[status] || classes.new || classes.draft}`}
+        >
             {status || 'unknown'}
         </span>
     );
@@ -173,7 +171,9 @@ export function formatMoney(value) {
         return '-';
     }
 
-    return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(Number(value));
+    return new Intl.NumberFormat('en', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
+        Number(value),
+    );
 }
 
 export function firstError(errors, field) {

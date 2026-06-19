@@ -49,7 +49,11 @@ export default function PublicLeadForm() {
                             </p>
                         </div>
 
-                        {error ? <div className="mt-5"><Alert tone="error">{error}</Alert></div> : null}
+                        {error ? (
+                            <div className="mt-5">
+                                <Alert tone="error">{error}</Alert>
+                            </div>
+                        ) : null}
 
                         {!error ? (
                             <form className="mt-6 grid gap-4" onSubmit={submit}>
@@ -92,7 +96,9 @@ export default function PublicLeadForm() {
                                     />
                                 </Field>
                                 <div>
-                                    <Button disabled={form.processing}>{form.processing ? 'Submitting...' : 'Submit'}</Button>
+                                    <Button disabled={form.processing}>
+                                        {form.processing ? 'Submitting...' : 'Submit'}
+                                    </Button>
                                 </div>
                             </form>
                         ) : null}

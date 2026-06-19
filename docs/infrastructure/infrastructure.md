@@ -29,9 +29,9 @@ Thông tin cần bổ sung theo dự án:
 - Lệnh chạy app: php artisan serve.
 - Lệnh build/chạy React asset: npm run dev.
 - Tài khoản seed mặc định cho admin, marketer và sales:
-  - admin: admin@admin 123123
-  - marketer: marketer@marketer 123123
-  - sales: sales@sales 123123
+    - admin: admin@admin 123123
+    - marketer: marketer@marketer 123123
+    - sales: sales@sales 123123
 
 ## Môi trường staging -> chưa cần bây giờ
 
@@ -62,16 +62,16 @@ Gợi ý cấu hình:
 
 Các biến môi trường cần có thể gồm:
 
-| Biến                        | Mô tả                                           |
-| --------------------------- | ----------------------------------------------- |
-| APP_ENV                     | Môi trường chạy app: local, staging, production |
-| APP_URL                     | URL Laravel app                                 |
-| DATABASE_URL                | Chuỗi kết nối database                          |
-| APP_KEY                     | Laravel app key dùng cho session/encryption     |
-| SESSION_DRIVER              | Driver lưu session                              |
-| VITE_*                      | Biến môi trường frontend dùng bởi Vite nếu có   |
-| STORAGE\_\*                 | Cấu hình lưu file nếu có                        |
-| MAIL\_\*                    | Cấu hình gửi email nếu có                       |
+| Biến           | Mô tả                                           |
+| -------------- | ----------------------------------------------- |
+| APP_ENV        | Môi trường chạy app: local, staging, production |
+| APP_URL        | URL Laravel app                                 |
+| DATABASE_URL   | Chuỗi kết nối database                          |
+| APP_KEY        | Laravel app key dùng cho session/encryption     |
+| SESSION_DRIVER | Driver lưu session                              |
+| VITE\_\*       | Biến môi trường frontend dùng bởi Vite nếu có   |
+| STORAGE\_\*    | Cấu hình lưu file nếu có                        |
+| MAIL\_\*       | Cấu hình gửi email nếu có                       |
 
 ## CI/CD gợi ý - github actions
 
@@ -104,7 +104,7 @@ Response gợi ý:
 
 ```json
 {
-  "status": "ok",
-  "database": "ok"
+    "status": "ok",
+    "database": "ok"
 }
 ```

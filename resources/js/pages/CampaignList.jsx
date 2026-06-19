@@ -36,11 +36,15 @@ export default function CampaignList() {
     const hasFilters = Object.entries(filters).some(([key, value]) => key !== 'page' && value);
 
     function visit(nextFilters) {
-        router.get('/campaigns', { ...nextFilters, limit: 10 }, {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
-        });
+        router.get(
+            '/campaigns',
+            { ...nextFilters, limit: 10 },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            },
+        );
     }
 
     function updateFilter(key, value) {
@@ -76,125 +80,157 @@ export default function CampaignList() {
     return (
         <AppLayout>
             <div className="space-y-6">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                    <p className="text-sm font-medium text-[#626260]">Marketing operations</p>
-                    <h1 className="mt-1 text-3xl font-medium tracking-[-0.4px] text-[#111111]">Campaigns</h1>
-                </div>
-                {meta.permissions?.create ? (
-                    <Link className="inline-flex items-center justify-center rounded-lg bg-[#111111] px-[18px] py-2.5 text-sm font-medium text-white transition hover:bg-black" href="/campaigns/new">
-                        New Campaign
-                    </Link>
-                ) : null}
-            </div>
-
-            <Card className="p-4">
-                <div className="grid gap-3 md:grid-cols-3">
-                    <Field label="Status">
-                        <Select value={filters.status} onChange={(event) => updateFilter('status', event.target.value)}>
-                            <option value="">All statuses</option>
-                            {(meta.filters?.statuses || []).map((status) => (
-                                <option key={status} value={status}>{status}</option>
-                            ))}
-                        </Select>
-                    </Field>
-                    <Field label="Source">
-                        <Select value={filters.source} onChange={(event) => updateFilter('source', event.target.value)}>
-                            <option value="">All sources</option>
-                            {(meta.filters?.sources || []).map((source) => (
-                                <option key={source} value={source}>{source}</option>
-                            ))}
-                        </Select>
-                    </Field>
-                    <Field label="Search">
-                        <TextInput
-                            value={filters.keyword}
-                            onChange={(event) => updateFilter('keyword', event.target.value)}
-                            placeholder="Campaign name"
-                        />
-                    </Field>
-                </div>
-                {hasFilters ? (
-                    <div className="mt-4">
-                        <Button variant="secondary" onClick={clearFilters}>Clear filters</Button>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <p className="text-sm font-medium text-[#626260]">Marketing operations</p>
+                        <h1 className="mt-1 text-3xl font-medium tracking-[-0.4px] text-[#111111]">Campaigns</h1>
                     </div>
-                ) : null}
-            </Card>
-
-            {flash?.error ? <Alert tone="error">{flash.error}</Alert> : null}
-            {flash?.success ? <Alert>{flash.success}</Alert> : null}
-
-            <Card className="overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-[#d3cec6] text-left text-sm">
-                        <thead className="bg-[#f5f1ec] text-xs font-medium uppercase text-[#626260]">
-                            <tr>
-                                <th className="px-4 py-3">Campaign name</th>
-                                <th className="px-4 py-3">Source</th>
-                                <th className="px-4 py-3">Status</th>
-                                <th className="px-4 py-3">Budget</th>
-                                <th className="px-4 py-3">Leads</th>
-                                <th className="px-4 py-3">Created by</th>
-                                <th className="px-4 py-3">Dates</th>
-                                <th className="px-4 py-3 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-[#ebe6df] bg-white">
-                            {campaigns.length ? campaigns.map((campaign) => (
-                                <tr key={campaign.id} className="align-top">
-                                    <td className="px-4 py-4 font-medium text-[#111111]">{campaign.name}</td>
-                                    <td className="px-4 py-4 text-[#626260]">{campaign.source}</td>
-                                    <td className="px-4 py-4"><StatusBadge type="campaign" status={campaign.status} /></td>
-                                    <td className="px-4 py-4 text-[#626260]">{formatMoney(campaign.budget)}</td>
-                                    <td className="px-4 py-4 text-[#111111]">{campaign.leads_count}</td>
-                                    <td className="px-4 py-4 text-[#626260]">{campaign.owner?.name || '-'}</td>
-                                    <td className="px-4 py-4 text-[#626260]">
-                                        <div>{formatDate(campaign.start_date)}</div>
-                                        <div>{formatDate(campaign.end_date)}</div>
-                                    </td>
-                                    <td className="px-4 py-4 text-right">
-                                        <div className="flex justify-end gap-3">
-                                            <Link className="font-medium text-[#111111] underline-offset-4 hover:underline" href={`/leads?campaign_id=${campaign.id}`}>
-                                                View
-                                            </Link>
-                                            {campaign.permissions?.edit ? <span className="text-[#626260]">Edit</span> : null}
-                                            {campaign.permissions?.pause ? (
-                                                <button
-                                                    className="font-medium text-[#111111] underline-offset-4 hover:underline disabled:text-[#9c9fa5]"
-                                                    disabled={actionId === campaign.id}
-                                                    onClick={() => updateStatus(campaign, 'paused')}
-                                                >
-                                                    Pause
-                                                </button>
-                                            ) : null}
-                                            {campaign.permissions?.activate ? (
-                                                <button
-                                                    className="font-medium text-[#111111] underline-offset-4 hover:underline disabled:text-[#9c9fa5]"
-                                                    disabled={actionId === campaign.id}
-                                                    onClick={() => updateStatus(campaign, 'active')}
-                                                >
-                                                    Activate
-                                                </button>
-                                            ) : null}
-                                        </div>
-                                    </td>
-                                </tr>
-                            )) : null}
-                        </tbody>
-                    </table>
+                    {meta.permissions?.create ? (
+                        <Link
+                            className="inline-flex items-center justify-center rounded-lg bg-[#111111] px-[18px] py-2.5 text-sm font-medium text-white transition hover:bg-black"
+                            href="/campaigns/new"
+                        >
+                            New Campaign
+                        </Link>
+                    ) : null}
                 </div>
-                {!campaigns.length ? (
-                    <EmptyState
-                        title={hasFilters ? 'No campaigns match these filters' : 'No campaigns yet'}
-                        description={hasFilters ? 'Try another source, status, or keyword.' : 'Campaigns will collect leads by source and owner once created.'}
+
+                <Card className="p-4">
+                    <div className="grid gap-3 md:grid-cols-3">
+                        <Field label="Status">
+                            <Select
+                                value={filters.status}
+                                onChange={(event) => updateFilter('status', event.target.value)}
+                            >
+                                <option value="">All statuses</option>
+                                {(meta.filters?.statuses || []).map((status) => (
+                                    <option key={status} value={status}>
+                                        {status}
+                                    </option>
+                                ))}
+                            </Select>
+                        </Field>
+                        <Field label="Source">
+                            <Select
+                                value={filters.source}
+                                onChange={(event) => updateFilter('source', event.target.value)}
+                            >
+                                <option value="">All sources</option>
+                                {(meta.filters?.sources || []).map((source) => (
+                                    <option key={source} value={source}>
+                                        {source}
+                                    </option>
+                                ))}
+                            </Select>
+                        </Field>
+                        <Field label="Search">
+                            <TextInput
+                                value={filters.keyword}
+                                onChange={(event) => updateFilter('keyword', event.target.value)}
+                                placeholder="Campaign name"
+                            />
+                        </Field>
+                    </div>
+                    {hasFilters ? (
+                        <div className="mt-4">
+                            <Button variant="secondary" onClick={clearFilters}>
+                                Clear filters
+                            </Button>
+                        </div>
+                    ) : null}
+                </Card>
+
+                {flash?.error ? <Alert tone="error">{flash.error}</Alert> : null}
+                {flash?.success ? <Alert>{flash.success}</Alert> : null}
+
+                <Card className="overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-[#d3cec6] text-left text-sm">
+                            <thead className="bg-[#f5f1ec] text-xs font-medium uppercase text-[#626260]">
+                                <tr>
+                                    <th className="px-4 py-3">Campaign name</th>
+                                    <th className="px-4 py-3">Source</th>
+                                    <th className="px-4 py-3">Status</th>
+                                    <th className="px-4 py-3">Budget</th>
+                                    <th className="px-4 py-3">Leads</th>
+                                    <th className="px-4 py-3">Created by</th>
+                                    <th className="px-4 py-3">Dates</th>
+                                    <th className="px-4 py-3 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[#ebe6df] bg-white">
+                                {campaigns.length
+                                    ? campaigns.map((campaign) => (
+                                          <tr key={campaign.id} className="align-top">
+                                              <td className="px-4 py-4 font-medium text-[#111111]">{campaign.name}</td>
+                                              <td className="px-4 py-4 text-[#626260]">{campaign.source}</td>
+                                              <td className="px-4 py-4">
+                                                  <StatusBadge type="campaign" status={campaign.status} />
+                                              </td>
+                                              <td className="px-4 py-4 text-[#626260]">
+                                                  {formatMoney(campaign.budget)}
+                                              </td>
+                                              <td className="px-4 py-4 text-[#111111]">{campaign.leads_count}</td>
+                                              <td className="px-4 py-4 text-[#626260]">
+                                                  {campaign.owner?.name || '-'}
+                                              </td>
+                                              <td className="px-4 py-4 text-[#626260]">
+                                                  <div>{formatDate(campaign.start_date)}</div>
+                                                  <div>{formatDate(campaign.end_date)}</div>
+                                              </td>
+                                              <td className="px-4 py-4 text-right">
+                                                  <div className="flex justify-end gap-3">
+                                                      <Link
+                                                          className="font-medium text-[#111111] underline-offset-4 hover:underline"
+                                                          href={`/leads?campaign_id=${campaign.id}`}
+                                                      >
+                                                          View
+                                                      </Link>
+                                                      {campaign.permissions?.edit ? (
+                                                          <span className="text-[#626260]">Edit</span>
+                                                      ) : null}
+                                                      {campaign.permissions?.pause ? (
+                                                          <button
+                                                              className="font-medium text-[#111111] underline-offset-4 hover:underline disabled:text-[#9c9fa5]"
+                                                              disabled={actionId === campaign.id}
+                                                              onClick={() => updateStatus(campaign, 'paused')}
+                                                          >
+                                                              Pause
+                                                          </button>
+                                                      ) : null}
+                                                      {campaign.permissions?.activate ? (
+                                                          <button
+                                                              className="font-medium text-[#111111] underline-offset-4 hover:underline disabled:text-[#9c9fa5]"
+                                                              disabled={actionId === campaign.id}
+                                                              onClick={() => updateStatus(campaign, 'active')}
+                                                          >
+                                                              Activate
+                                                          </button>
+                                                      ) : null}
+                                                  </div>
+                                              </td>
+                                          </tr>
+                                      ))
+                                    : null}
+                            </tbody>
+                        </table>
+                    </div>
+                    {!campaigns.length ? (
+                        <EmptyState
+                            title={hasFilters ? 'No campaigns match these filters' : 'No campaigns yet'}
+                            description={
+                                hasFilters
+                                    ? 'Try another source, status, or keyword.'
+                                    : 'Campaigns will collect leads by source and owner once created.'
+                            }
+                        />
+                    ) : null}
+                    <Pagination
+                        page={paginator?.current_page || 1}
+                        lastPage={paginator?.last_page || 1}
+                        onPage={changePage}
                     />
-                ) : null}
-                <Pagination
-                    page={paginator?.current_page || 1}
-                    lastPage={paginator?.last_page || 1}
-                    onPage={changePage}
-                />
-            </Card>
+                </Card>
             </div>
         </AppLayout>
     );

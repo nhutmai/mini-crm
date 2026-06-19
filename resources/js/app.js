@@ -10,12 +10,6 @@ createInertiaApp({
         return pages[`./pages/${name}.jsx`];
     },
     setup({ el, App, props }) {
-        createRoot(el).render(
-            React.createElement(
-                React.StrictMode,
-                null,
-                React.createElement(App, props),
-            ),
-        );
+        createRoot(el).render(React.createElement(React.StrictMode, null, React.createElement(App, props)));
     },
 });

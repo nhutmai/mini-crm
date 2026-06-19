@@ -57,10 +57,10 @@ Before choosing the next implementation step:
 
 - Follow Laravel conventions for controllers, middleware, validation, Eloquent models, migrations, and seeders.
 - Keep role-based access rules consistent with the docs:
-  - Admin can manage the whole system.
-  - Marketer is limited to their campaigns and related leads.
-  - Sales is limited to assigned leads.
-  - Public users can only submit public lead forms.
+    - Admin can manage the whole system.
+    - Marketer is limited to their campaigns and related leads.
+    - Sales is limited to assigned leads.
+    - Public users can only submit public lead forms.
 - Store lead processing history through lead activities or assignment records as described in the docs.
 - Keep request validation close to controller/form request boundaries.
 - Avoid broad refactors unless they are necessary for the requested task.

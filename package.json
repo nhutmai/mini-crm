@@ -4,11 +4,18 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "format": "npm run format:js && npm run format:php",
+        "format:check": "npm run format:js:check && npm run format:php:check",
+        "format:js": "prettier --write \"*.{json,md}\" \"docs/**/*.md\" \"resources/**/*.{css,js,jsx,md}\"",
+        "format:js:check": "prettier --check \"*.{json,md}\" \"docs/**/*.md\" \"resources/**/*.{css,js,jsx,md}\"",
+        "format:php": "vendor/bin/pint",
+        "format:php:check": "vendor/bin/pint --test"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
         "laravel-vite-plugin": "^3.1",
+        "prettier": "^3.8.4",
         "tailwindcss": "^4.0.0",
         "vite": "^8.0.0"
     },

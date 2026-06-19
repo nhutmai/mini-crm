@@ -18,17 +18,32 @@ export default function Dashboard() {
                     <Card className="p-5">
                         <p className="text-sm text-[#626260]">Lead list</p>
                         <h2 className="mt-2 text-xl font-medium text-[#111111]">Filter and qualify</h2>
-                        <Link className="mt-5 inline-flex items-center justify-center rounded-lg bg-[#111111] px-[18px] py-2.5 text-sm font-medium text-white transition hover:bg-black" href="/leads">Open leads</Link>
+                        <Link
+                            className="mt-5 inline-flex items-center justify-center rounded-lg bg-[#111111] px-[18px] py-2.5 text-sm font-medium text-white transition hover:bg-black"
+                            href="/leads"
+                        >
+                            Open leads
+                        </Link>
                     </Card>
                     <Card className="p-5">
                         <p className="text-sm text-[#626260]">Campaigns</p>
                         <h2 className="mt-2 text-xl font-medium text-[#111111]">Track sources</h2>
-                        <Link className="mt-5 inline-flex items-center justify-center rounded-lg border border-[#d3cec6] bg-white px-[18px] py-2.5 text-sm font-medium text-[#111111] transition hover:bg-[#f5f1ec]" href="/campaigns">Open campaigns</Link>
+                        <Link
+                            className="mt-5 inline-flex items-center justify-center rounded-lg border border-[#d3cec6] bg-white px-[18px] py-2.5 text-sm font-medium text-[#111111] transition hover:bg-[#f5f1ec]"
+                            href="/campaigns"
+                        >
+                            Open campaigns
+                        </Link>
                     </Card>
                     <Card className="p-5">
                         <p className="text-sm text-[#626260]">Public form</p>
                         <h2 className="mt-2 text-xl font-medium text-[#111111]">Capture leads</h2>
-                        <Link className="mt-5 inline-flex items-center justify-center rounded-lg border border-[#d3cec6] bg-white px-[18px] py-2.5 text-sm font-medium text-[#111111] transition hover:bg-[#f5f1ec]" href="/public/leads">Open form</Link>
+                        <Link
+                            className="mt-5 inline-flex items-center justify-center rounded-lg border border-[#d3cec6] bg-white px-[18px] py-2.5 text-sm font-medium text-[#111111] transition hover:bg-[#f5f1ec]"
+                            href="/public/leads"
+                        >
+                            Open form
+                        </Link>
                     </Card>
                 </div>
             </div>

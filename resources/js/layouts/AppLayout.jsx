@@ -42,9 +42,20 @@ export default function AppLayout({ children }) {
                                 <p className="text-sm font-medium text-[#111111]">Lead operations</p>
                                 <p className="text-xs text-[#626260]">Admin, marketing, and sales workspace</p>
                             </div>
-                            <Link className="rounded-lg border border-[#d3cec6] bg-white px-3 py-2 text-sm font-medium text-[#111111]" href="/public/leads">
-                                Public form
-                            </Link>
+                            <div className="flex gap-2">
+                                <Link
+                                    className="rounded-lg border border-[#d3cec6] bg-white px-3 py-2 text-sm font-medium text-[#111111]"
+                                    href="/login"
+                                >
+                                    Login
+                                </Link>
+                                <Link
+                                    className="rounded-lg border border-[#d3cec6] bg-white px-3 py-2 text-sm font-medium text-[#111111]"
+                                    href="/public/leads"
+                                >
+                                    Public form
+                                </Link>
+                            </div>
                         </div>
                     </header>
                     <main className="min-w-0 flex-1 px-4 py-6 lg:px-8 lg:py-8">{children}</main>

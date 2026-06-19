@@ -238,6 +238,7 @@ class LeadController extends Controller
 
         if ($user->isMarketer()) {
             $query->whereHas('campaign', fn (Builder $query) => $query->where('owner_id', $user->id));
+
             return;
         }
 

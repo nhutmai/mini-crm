@@ -110,6 +110,7 @@ class CampaignController extends Controller
 
         if ($user->isMarketer()) {
             $query->where('owner_id', $user->id);
+
             return;
         }
 

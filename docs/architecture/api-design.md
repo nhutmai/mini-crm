@@ -20,10 +20,10 @@ Response lỗi gợi ý:
 
 ```json
 {
-  "message": "Validation failed",
-  "errors": {
-    "email": ["Email không hợp lệ"]
-  }
+    "message": "Validation failed",
+    "errors": {
+        "email": ["Email không hợp lệ"]
+    }
 }
 ```
 
@@ -37,8 +37,8 @@ Request:
 
 ```json
 {
-  "email": "admin@example.com",
-  "password": "password"
+    "email": "admin@example.com",
+    "password": "password"
 }
 ```
 
@@ -46,12 +46,12 @@ Response:
 
 ```json
 {
-  "user": {
-    "id": "1",
-    "name": "Admin",
-    "email": "admin@example.com",
-    "role": "admin"
-  }
+    "user": {
+        "id": "1",
+        "name": "Admin",
+        "email": "admin@example.com",
+        "role": "admin"
+    }
 }
 ```
 
@@ -89,12 +89,12 @@ Request:
 
 ```json
 {
-  "name": "Facebook Ads tháng 6",
-  "source": "facebook_ads",
-  "description": "Chiến dịch thu lead từ Facebook",
-  "start_date": "2026-06-01",
-  "end_date": "2026-06-30",
-  "status": "active"
+    "name": "Facebook Ads tháng 6",
+    "source": "facebook_ads",
+    "description": "Chiến dịch thu lead từ Facebook",
+    "start_date": "2026-06-01",
+    "end_date": "2026-06-30",
+    "status": "active"
 }
 ```
 
@@ -142,12 +142,12 @@ Request:
 
 ```json
 {
-  "campaign_id": "10",
-  "full_name": "Nguyen Van A",
-  "phone": "0900000000",
-  "email": "a@example.com",
-  "need": "Muốn được tư vấn dịch vụ",
-  "source": "manual"
+    "campaign_id": "10",
+    "full_name": "Nguyen Van A",
+    "phone": "0900000000",
+    "email": "a@example.com",
+    "need": "Muốn được tư vấn dịch vụ",
+    "source": "manual"
 }
 ```
 
@@ -159,12 +159,12 @@ Request:
 
 ```json
 {
-  "campaign_id": "10",
-  "full_name": "Nguyen Van A",
-  "phone": "0900000000",
-  "email": "a@example.com",
-  "need": "Tôi muốn nhận tư vấn",
-  "source": "landing_page"
+    "campaign_id": "10",
+    "full_name": "Nguyen Van A",
+    "phone": "0900000000",
+    "email": "a@example.com",
+    "need": "Tôi muốn nhận tư vấn",
+    "source": "landing_page"
 }
 ```
 
@@ -184,7 +184,7 @@ Request:
 
 ```json
 {
-  "sales_id": "5"
+    "sales_id": "5"
 }
 ```
 
@@ -196,8 +196,8 @@ Request:
 
 ```json
 {
-  "status": "qualified",
-  "note": "Khách quan tâm, hẹn gọi lại vào ngày mai"
+    "status": "qualified",
+    "note": "Khách quan tâm, hẹn gọi lại vào ngày mai"
 }
 ```
 
@@ -215,8 +215,8 @@ Request:
 
 ```json
 {
-  "type": "note",
-  "content": "Đã gọi lần 1 nhưng khách chưa nghe máy"
+    "type": "note",
+    "content": "Đã gọi lần 1 nhưng khách chưa nghe máy"
 }
 ```
 
@@ -230,15 +230,15 @@ Response gợi ý:
 
 ```json
 {
-  "total_leads": 120,
-  "new_leads": 25,
-  "converted_leads": 18,
-  "conversion_rate": 15,
-  "by_status": [
-    { "status": "new", "count": 25 },
-    { "status": "contacted", "count": 40 },
-    { "status": "converted", "count": 18 }
-  ]
+    "total_leads": 120,
+    "new_leads": 25,
+    "converted_leads": 18,
+    "conversion_rate": 15,
+    "by_status": [
+        { "status": "new", "count": 25 },
+        { "status": "contacted", "count": 40 },
+        { "status": "converted", "count": 18 }
+    ]
 }
 ```
 

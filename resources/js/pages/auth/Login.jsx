@@ -1,8 +1,18 @@
 import React from 'react';
-import { Link } from '@inertiajs/react';
-import { Card, Field, TextInput } from '../components/ui.jsx';
+import { Link, useForm } from '@inertiajs/react';
+import { Card, Field, TextInput } from '../../components/ui.jsx';
 
 export default function Login() {
+    const { data, setData, post, processing, errors } = useForm({
+        email: '',
+        password: '',
+    });
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        post('/login');
+    }
+
     return (
         <main className="min-h-screen bg-[#f5f1ec] text-[#111111]">
             <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-4 py-6 sm:px-6 lg:px-8">
@@ -48,13 +58,23 @@ export default function Login() {
                             </p>
                         </div>
 
-                        <form className="mt-6 space-y-4">
+                        <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
                             <Field label="Email">
-                                <TextInput type="email" placeholder="admin@example.com" />
+                                <TextInput
+                                    type="email"
+                                    placeholder="admin@example.com"
+                                    value={data.email}
+                                    onChange={(e) => setData('email', e.target.value)}
+                                />
                             </Field>
 
                             <Field label="Password">
-                                <TextInput type="password" placeholder="Enter your password" />
+                                <TextInput
+                                    type="password"
+                                    placeholder="Enter your password"
+                                    value={data.password}
+                                    onChange={(e) => setData('password', e.target.value)}
+                                />
                             </Field>
 
                             <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
@@ -68,9 +88,10 @@ export default function Login() {
                                 <span className="text-sm font-medium text-[#111111]">Forgot password?</span>
                             </div>
 
+                            <div className="text-red-500">{errors.email && errors.email}</div>
                             <button
                                 className="mt-2 inline-flex w-full items-center justify-center rounded-lg bg-[#111111] px-[18px] py-3 text-sm font-medium text-white transition hover:bg-black"
-                                type="button"
+                                type="submit"
                             >
                                 Sign in
                             </button>

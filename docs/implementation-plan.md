@@ -62,9 +62,9 @@ npm run dev
 ### Codex sẽ làm
 
 - [ ] Tạo migration cơ bản cho:
-    - [ ] `users`
+    - [x] `users`
     - [ ] `campaigns`
-    - [ ] `leads`
+    - [x] `leads`
     - [ ] `lead_activities`
     - [ ] `lead_assignments` nếu cần tách lịch sử assign riêng
 - [ ] Tạo Eloquent model và relationship:

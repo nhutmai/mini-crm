@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useForm } from '@inertiajs/react';
-import { Card, Field, TextInput } from '../../components/ui.jsx';
+import { LockKeyhole, LogIn, Mail } from 'lucide-react';
+import { Card, Field } from '../../components/ui.jsx';
 
 export default function Login() {
     const { data, setData, post, processing, errors } = useForm({
@@ -60,21 +61,39 @@ export default function Login() {
 
                         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
                             <Field label="Email">
-                                <TextInput
-                                    type="email"
-                                    placeholder="admin@example.com"
-                                    value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
-                                />
+                                <div className="relative">
+                                    <Mail
+                                        aria-hidden="true"
+                                        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9c9fa5]"
+                                        size={16}
+                                        strokeWidth={1.8}
+                                    />
+                                    <input
+                                        className="w-full rounded-lg border border-[#d3cec6] bg-white py-2.5 pl-9 pr-3.5 text-sm text-[#111111] outline-none transition placeholder:text-[#9c9fa5] focus:border-[#111111]"
+                                        type="email"
+                                        placeholder="admin@example.com"
+                                        value={data.email}
+                                        onChange={(e) => setData('email', e.target.value)}
+                                    />
+                                </div>
                             </Field>
 
                             <Field label="Password">
-                                <TextInput
-                                    type="password"
-                                    placeholder="Enter your password"
-                                    value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
-                                />
+                                <div className="relative">
+                                    <LockKeyhole
+                                        aria-hidden="true"
+                                        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9c9fa5]"
+                                        size={16}
+                                        strokeWidth={1.8}
+                                    />
+                                    <input
+                                        className="w-full rounded-lg border border-[#d3cec6] bg-white py-2.5 pl-9 pr-3.5 text-sm text-[#111111] outline-none transition placeholder:text-[#9c9fa5] focus:border-[#111111]"
+                                        type="password"
+                                        placeholder="Enter your password"
+                                        value={data.password}
+                                        onChange={(e) => setData('password', e.target.value)}
+                                    />
+                                </div>
                             </Field>
 
                             <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
@@ -90,9 +109,10 @@ export default function Login() {
 
                             <div className="text-red-500">{errors.email && errors.email}</div>
                             <button
-                                className="mt-2 inline-flex w-full items-center justify-center rounded-lg bg-[#111111] px-[18px] py-3 text-sm font-medium text-white transition hover:bg-black"
+                                className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#111111] px-[18px] py-3 text-sm font-medium text-white transition hover:bg-black"
                                 type="submit"
                             >
+                                <LogIn aria-hidden="true" size={16} strokeWidth={1.8} />
                                 Sign in
                             </button>
                         </form>

@@ -20,7 +20,7 @@ Route::post('/public/leads', [PublicLeadController::class, 'store'])->name('publ
 Route::middleware([IsLogin::class])->group(function () {
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-    Route::get('/me', fn() => response()->json([
+    Route::get('/me', fn () => response()->json([
         'user' => request()->user(),
     ]))->name('me');
 

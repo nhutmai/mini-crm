@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useForm, usePage } from '@inertiajs/react';
+import { ArrowLeft, History, MessageSquarePlus, RefreshCcw, UserPlus } from 'lucide-react';
 import AppLayout from '../layouts/AppLayout.jsx';
 import {
-    Alert,
     Button,
     Card,
     EmptyState,
@@ -16,7 +16,7 @@ import {
 } from '../components/ui.jsx';
 
 export default function LeadDetail() {
-    const { lead, meta, flash } = usePage().props;
+    const { lead, meta } = usePage().props;
     const noteForm = useForm({ content: '' });
     const statusForm = useForm({ status: lead?.status || '', note: '' });
     const assignForm = useForm({ sales_id: lead?.assigned_sales?.id || '' });
@@ -58,18 +58,16 @@ export default function LeadDetail() {
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                         <Link
-                            className="text-sm font-medium text-[#626260] underline-offset-4 hover:underline"
+                            className="inline-flex items-center gap-1.5 text-sm font-medium text-[#626260] underline-offset-4 hover:underline"
                             href="/leads"
                         >
+                            <ArrowLeft aria-hidden="true" size={15} strokeWidth={1.8} />
                             Back to leads
                         </Link>
                         <h1 className="mt-2 text-3xl font-medium tracking-[-0.4px] text-[#111111]">{lead.full_name}</h1>
                     </div>
                     <StatusBadge status={lead.status} />
                 </div>
-
-                {flash?.success ? <Alert>{flash.success}</Alert> : null}
-                {flash?.error ? <Alert tone="error">{flash.error}</Alert> : null}
 
                 <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
                     <div className="space-y-6">
@@ -109,7 +107,8 @@ export default function LeadDetail() {
                                         />
                                     </Field>
                                     <div className="mt-3">
-                                        <Button disabled={noteForm.processing}>
+                                        <Button className="gap-2" disabled={noteForm.processing}>
+                                            <MessageSquarePlus aria-hidden="true" size={16} strokeWidth={1.8} />
                                             {noteForm.processing ? 'Saving...' : 'Add note'}
                                         </Button>
                                     </div>
@@ -142,10 +141,15 @@ export default function LeadDetail() {
                                         </div>
                                     ))
                                 ) : (
-                                    <EmptyState
-                                        title="No activity yet"
-                                        description="Notes and status changes will appear here."
-                                    />
+                                    <div className="px-6 py-10 text-center">
+                                        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg border border-[#d3cec6] bg-[#f5f1ec] text-[#626260]">
+                                            <History aria-hidden="true" size={20} strokeWidth={1.8} />
+                                        </div>
+                                        <h3 className="mt-4 text-base font-medium text-[#111111]">No activity yet</h3>
+                                        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#626260]">
+                                            Notes and status changes will appear here.
+                                        </p>
+                                    </div>
                                 )}
                             </div>
                         </Card>
@@ -185,7 +189,8 @@ export default function LeadDetail() {
                                             placeholder="Optional context"
                                         />
                                     </Field>
-                                    <Button disabled={statusForm.processing}>
+                                    <Button className="gap-2" disabled={statusForm.processing}>
+                                        <RefreshCcw aria-hidden="true" size={16} strokeWidth={1.8} />
                                         {statusForm.processing ? 'Updating...' : 'Update status'}
                                     </Button>
                                 </form>
@@ -209,7 +214,8 @@ export default function LeadDetail() {
                                             ))}
                                         </Select>
                                     </Field>
-                                    <Button disabled={assignForm.processing}>
+                                    <Button className="gap-2" disabled={assignForm.processing}>
+                                        <UserPlus aria-hidden="true" size={16} strokeWidth={1.8} />
                                         {assignForm.processing ? 'Assigning...' : 'Assign lead'}
                                     </Button>
                                 </form>

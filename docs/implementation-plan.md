@@ -57,27 +57,29 @@ npm run dev
 - [x] Xác nhận app mở được trên local.
 - [x] Chỉnh tên app, database `.env` và thông tin môi trường local.
 
-## [ ] Phase 2 - Database và model
+## [x] Phase 2 - Database và model
 
 ### Codex sẽ làm
 
-- [ ] Tạo migration cơ bản cho:
-    - [ ] `users`
-    - [ ] `campaigns`
-    - [ ] `leads`
-    - [ ] `lead_activities`
-    - [ ] `lead_assignments` nếu cần tách lịch sử assign riêng
-- [ ] Tạo Eloquent model và relationship:
-    - [ ] `User hasMany Campaign`
-    - [ ] `Campaign belongsTo User`
-    - [ ] `Campaign hasMany Lead`
-    - [ ] `Lead belongsTo Campaign`
-    - [ ] `Lead belongsTo User as assignedSales`
-    - [ ] `Lead hasMany LeadActivity`
-- [ ] Tạo seeder tài khoản mẫu:
-    - [ ] admin
-    - [ ] marketer
-    - [ ] sales
+- [x] Tạo migration cơ bản cho:
+    - [x] `users`
+    - [x] `campaigns`
+    - [x] `leads`
+    - [x] `lead_activities`
+    - [x] Không tạo `lead_assignments` trong MVP; dùng `lead_activities` để lưu lịch sử assign
+- [x] Tạo Eloquent model và relationship:
+    - [x] `User hasMany Campaign`
+    - [x] `Campaign belongsTo User`
+    - [x] `Campaign hasMany Lead`
+    - [x] `Lead belongsTo Campaign`
+    - [x] `Lead belongsTo User as assignedSales`
+    - [x] `Lead hasMany LeadActivity`
+- [x] Tạo seeder tài khoản mẫu:
+    - [x] admin
+    - [x] marketer
+    - [x] sales
+
+Ghi chú Phase 2: chưa tạo bảng `lead_assignments` riêng vì MVP đang lưu sales hiện tại ở `leads.assigned_to` và lịch sử giao lead trong `lead_activities` với type `assignment`. Nếu về sau cần báo cáo assignment chuyên sâu, có thể tách bảng riêng ở phase nâng cấp.
 
 ### Người viết dự án sẽ làm
 

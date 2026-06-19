@@ -1,7 +1,33 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
+import { FileText, Megaphone, UsersRound } from 'lucide-react';
 import AppLayout from '../layouts/AppLayout.jsx';
 import { Card } from '../components/ui.jsx';
+
+const shortcuts = [
+    {
+        label: 'Lead list',
+        title: 'Filter and qualify',
+        href: '/leads',
+        action: 'Open leads',
+        icon: UsersRound,
+        primary: true,
+    },
+    {
+        label: 'Campaigns',
+        title: 'Track sources',
+        href: '/campaigns',
+        action: 'Open campaigns',
+        icon: Megaphone,
+    },
+    {
+        label: 'Public form',
+        title: 'Capture leads',
+        href: '/public/leads',
+        action: 'Open form',
+        icon: FileText,
+    },
+];
 
 export default function Dashboard() {
     return (
@@ -15,21 +41,29 @@ export default function Dashboard() {
                     </p>
                 </div>
                 <div className="grid gap-4 md:grid-cols-3">
-                    <Card className="p-5">
-                        <p className="text-sm text-[#626260]">Lead list</p>
-                        <h2 className="mt-2 text-xl font-medium text-[#111111]">Filter and qualify</h2>
-                        <Link className="mt-5 inline-flex items-center justify-center rounded-lg bg-[#111111] px-[18px] py-2.5 text-sm font-medium text-white transition hover:bg-black" href="/leads">Open leads</Link>
-                    </Card>
-                    <Card className="p-5">
-                        <p className="text-sm text-[#626260]">Campaigns</p>
-                        <h2 className="mt-2 text-xl font-medium text-[#111111]">Track sources</h2>
-                        <Link className="mt-5 inline-flex items-center justify-center rounded-lg border border-[#d3cec6] bg-white px-[18px] py-2.5 text-sm font-medium text-[#111111] transition hover:bg-[#f5f1ec]" href="/campaigns">Open campaigns</Link>
-                    </Card>
-                    <Card className="p-5">
-                        <p className="text-sm text-[#626260]">Public form</p>
-                        <h2 className="mt-2 text-xl font-medium text-[#111111]">Capture leads</h2>
-                        <Link className="mt-5 inline-flex items-center justify-center rounded-lg border border-[#d3cec6] bg-white px-[18px] py-2.5 text-sm font-medium text-[#111111] transition hover:bg-[#f5f1ec]" href="/public/leads">Open form</Link>
-                    </Card>
+                    {shortcuts.map((item) => {
+                        const Icon = item.icon;
+
+                        return (
+                            <Card className="p-5" key={item.href}>
+                                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#d3cec6] bg-[#f5f1ec] text-[#111111]">
+                                    <Icon aria-hidden="true" size={18} strokeWidth={1.8} />
+                                </div>
+                                <p className="mt-4 text-sm text-[#626260]">{item.label}</p>
+                                <h2 className="mt-2 text-xl font-medium text-[#111111]">{item.title}</h2>
+                                <Link
+                                    className={`mt-5 inline-flex items-center justify-center rounded-lg px-[18px] py-2.5 text-sm font-medium transition ${
+                                        item.primary
+                                            ? 'bg-[#111111] text-white hover:bg-black'
+                                            : 'border border-[#d3cec6] bg-white text-[#111111] hover:bg-[#f5f1ec]'
+                                    }`}
+                                    href={item.href}
+                                >
+                                    {item.action}
+                                </Link>
+                            </Card>
+                        );
+                    })}
                 </div>
             </div>
         </AppLayout>

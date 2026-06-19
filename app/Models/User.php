@@ -7,8 +7,8 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 #[Fillable(['name', 'email', 'password', 'role', 'status'])]
@@ -17,6 +17,27 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    public const ROLE_ADMIN = 'admin';
+
+    public const ROLE_MARKETER = 'marketer';
+
+    public const ROLE_SALES = 'sales';
+
+    public const ROLES = [
+        self::ROLE_ADMIN,
+        self::ROLE_MARKETER,
+        self::ROLE_SALES,
+    ];
+
+    public const STATUS_ACTIVE = 'active';
+
+    public const STATUS_INACTIVE = 'inactive';
+
+    public const STATUSES = [
+        self::STATUS_ACTIVE,
+        self::STATUS_INACTIVE,
+    ];
 
     /**
      * Get the attributes that should be cast.
@@ -48,16 +69,21 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role === self::ROLE_ADMIN;
     }
 
     public function isMarketer(): bool
     {
-        return $this->role === 'marketer';
+        return $this->role === self::ROLE_MARKETER;
     }
 
     public function isSales(): bool
     {
-        return $this->role === 'sales';
+        return $this->role === self::ROLE_SALES;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === self::STATUS_ACTIVE;
     }
 }

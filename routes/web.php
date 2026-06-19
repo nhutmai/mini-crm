@@ -24,6 +24,7 @@ Route::middleware([IsLogin::class])->group(function () {
         'user' => request()->user(),
     ]))->name('me');
 
+    Route::get('/members', [UserController::class, 'members'])->name('members.index');
     Route::get('/profile', [UserController::class, 'profile'])->name('profile.edit');
     Route::patch('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
 

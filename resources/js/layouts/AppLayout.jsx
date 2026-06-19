@@ -20,6 +20,7 @@ const navItems = [
     { label: 'Campaigns', href: '/campaigns', icon: Megaphone },
     { label: 'Leads', href: '/leads', icon: UsersRound },
     { label: 'Reports', href: '/reports', icon: ChartNoAxesColumn },
+    { label: 'Members', href: '/members', icon: UserCog },
     { label: 'Settings', href: '/profile', icon: Settings },
 ];
 

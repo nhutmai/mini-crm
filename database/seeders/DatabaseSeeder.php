@@ -17,36 +17,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::factory()->create([
+        $admin = User::factory()->admin()->create([
             'name' => 'Admin',
-            'email' => 'admin@admin',
+            'email' => 'admin@example.com',
             'password' => '123123',
-            'role' => 'admin',
-            'status' => 'active',
         ]);
 
-        $marketer = User::factory()->create([
+        $marketer = User::factory()->marketer()->create([
             'name' => 'Marketing Lead',
-            'email' => 'marketer@marketer',
+            'email' => 'marketer@example.com',
             'password' => '123123',
-            'role' => 'marketer',
-            'status' => 'active',
         ]);
 
-        $sales = User::factory()->create([
+        $sales = User::factory()->sales()->create([
             'name' => 'Sales One',
-            'email' => 'sales@sales',
+            'email' => 'sales@example.com',
             'password' => '123123',
-            'role' => 'sales',
-            'status' => 'active',
         ]);
 
-        $salesTwo = User::factory()->create([
+        $salesTwo = User::factory()->sales()->create([
             'name' => 'Sales Two',
-            'email' => 'sales2@sales',
+            'email' => 'sales2@example.com',
             'password' => '123123',
-            'role' => 'sales',
-            'status' => 'active',
         ]);
 
         $summer = Campaign::create([

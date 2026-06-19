@@ -29,9 +29,9 @@ Thông tin cần bổ sung theo dự án:
 - Lệnh chạy app: php artisan serve.
 - Lệnh build/chạy React asset: npm run dev.
 - Tài khoản seed mặc định cho admin, marketer và sales:
-    - admin: admin@admin 123123
-    - marketer: marketer@marketer 123123
-    - sales: sales@sales 123123
+    - admin: admin@example.com 123123
+    - marketer: marketer@example.com 123123
+    - sales: sales@example.com 123123
 
 ## Môi trường staging -> chưa cần bây giờ
 

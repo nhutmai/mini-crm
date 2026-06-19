@@ -199,7 +199,7 @@ export default function LeadDetail() {
 
                         {meta.permissions?.assign ? (
                             <Card className="p-6">
-                                <h2 className="text-lg font-medium text-[#111111]">Assign lead</h2>
+                                <h2 className="text-lg font-medium text-[#111111]"></h2>
                                 <form className="mt-5 space-y-4" onSubmit={submitAssign}>
                                     <Field label="Sales user" error={firstError(assignForm.errors, 'sales_id')}>
                                         <Select
@@ -216,7 +216,7 @@ export default function LeadDetail() {
                                     </Field>
                                     <Button className="gap-2" disabled={assignForm.processing}>
                                         <UserPlus aria-hidden="true" size={16} strokeWidth={1.8} />
-                                        {assignForm.processing ? 'Assigning...' : 'Assign lead'}
+                                        {assignForm.processing ? 'Assigning...' : ''}
                                     </Button>
                                 </form>
                             </Card>

@@ -122,7 +122,13 @@ class LeadController extends Controller
         abort_unless($this->canAssignLead($request->user(), $lead), 403);
 
         $validated = $request->validate([
-            'sales_id' => ['required', 'integer', Rule::exists('users', 'id')->where('role', 'sales')->where('status', 'active')],
+            'sales_id' => [
+                'required',
+                'integer',
+                Rule::exists('users', 'id')
+                    ->where('role', User::ROLE_SALES)
+                    ->where('status', User::STATUS_ACTIVE),
+            ],
         ]);
 
         $sales = User::findOrFail($validated['sales_id']);
@@ -183,8 +189,8 @@ class LeadController extends Controller
     {
         return User::query()
             ->select('id', 'name', 'email')
-            ->where('role', 'sales')
-            ->where('status', 'active')
+            ->where('role', User::ROLE_SALES)
+            ->where('status', User::STATUS_ACTIVE)
             ->orderBy('name')
             ->get();
     }

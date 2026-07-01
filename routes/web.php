@@ -3,6 +3,7 @@
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\PublicLeadController;
+use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsLogin;
 use App\Http\Middleware\IsNotLogin;
@@ -24,7 +25,7 @@ Route::middleware([IsLogin::class])->group(function () {
         'user' => request()->user(),
     ]))->name('me');
 
-    Route::get('/members', [UserController::class, 'members'])->name('members.index');
+    Route::get('/members', fn () => redirect()->route('teams.index', ['tab' => 'members']))->name('members.index');
     Route::get('/profile', [UserController::class, 'profile'])->name('profile.edit');
     Route::patch('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
 
@@ -42,4 +43,13 @@ Route::middleware([IsLogin::class])->group(function () {
     Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
     Route::patch('/campaigns/{campaign}/status', [CampaignController::class, 'updateStatus'])->name('campaigns.status');
     Route::delete('/campaigns/{campaign}', [CampaignController::class, 'destroy'])->name('campaigns.destroy');
+
+    Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
+    Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
+    Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
+    Route::delete('/teams/{team}', [TeamController::class, 'destroy'])->name('teams.destroy');
+    Route::patch('/teams/{team}/lead', [TeamController::class, 'updateLead'])->name('teams.lead.update');
+    Route::post('/teams/{team}/members', [TeamController::class, 'addMember'])->name('teams.members.store');
+    Route::delete('/teams/{team}/members/{user}', [TeamController::class, 'removeMember'])->name('teams.members.destroy');
+    Route::post('/teams/{team}/invites', [TeamController::class, 'invite'])->name('teams.invites.store');
 });

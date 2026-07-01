@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Campaign;
 use App\Models\Lead;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -40,6 +41,24 @@ class DatabaseSeeder extends Seeder
             'email' => 'sales2@example.com',
             'password' => '123123',
         ]);
+
+        $salesTeam = Team::create([
+            'name' => 'Sales Operations',
+            'description' => 'Primary sales team for qualified marketing leads.',
+            'created_by' => $admin->id,
+        ]);
+
+        $marketingTeam = Team::create([
+            'name' => 'Marketing Growth',
+            'description' => 'Campaign owners and lead intake operators.',
+            'created_by' => $admin->id,
+        ]);
+
+        $sales->update(['team_id' => $salesTeam->id]);
+        $salesTwo->update(['team_id' => $salesTeam->id]);
+        $marketer->update(['team_id' => $marketingTeam->id]);
+
+        $salesTeam->update(['lead_id' => $sales->id]);
 
         $summer = Campaign::create([
             'owner_id' => $marketer->id,

@@ -28,11 +28,11 @@ class ExampleTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_authenticated_user_can_open_members_page(): void
+    public function test_authenticated_user_can_open_teams_page(): void
     {
         $user = User::factory()->admin()->create();
 
-        $response = $this->actingAs($user)->get('/members');
+        $response = $this->actingAs($user)->get('/teams');
 
         $response->assertStatus(200);
     }

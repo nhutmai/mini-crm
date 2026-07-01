@@ -7,11 +7,12 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role', 'status'])]
+#[Fillable(['name', 'email', 'password', 'role', 'status', 'team_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -57,6 +58,21 @@ class User extends Authenticatable
         return $this->hasMany(Campaign::class, 'owner_id');
     }
 
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class);
+    }
+
+    public function leadingTeams(): HasMany
+    {
+        return $this->hasMany(Team::class, 'lead_id');
+    }
+
+    public function createdTeams(): HasMany
+    {
+        return $this->hasMany(Team::class, 'created_by');
+    }
+
     public function assignedLeads(): HasMany
     {
         return $this->hasMany(Lead::class, 'assigned_to');
@@ -85,5 +101,10 @@ class User extends Authenticatable
     public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
+    }
+
+    public function isTeamLeadOf(Team $team): bool
+    {
+        return $team->lead_id === $this->id;
     }
 }

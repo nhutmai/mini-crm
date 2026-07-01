@@ -252,9 +252,151 @@ Lấy hiệu quả xử lý theo sales.
 
 ## User routes
 
+### GET /teams
+
+Trang danh sách team nội bộ. Route trả về Inertia page `TeamList`.
+
+Query gợi ý:
+
+- `page`
+- `limit`
+- `keyword`
+
+Quyền:
+
+- Admin xem toàn bộ team.
+- Lead xem team mình đang phụ trách.
+- Member thường có thể xem team mình thuộc nếu cần hiển thị thông tin nội bộ.
+
+### POST /teams
+
+Admin tạo team mới. Lead là optional nhưng không gán ngay nếu chưa có member trong team.
+
+Request:
+
+```json
+{
+    "name": "Sales North",
+    "description": "Team phụ trách lead khu vực phía Bắc"
+}
+```
+
+Quyền:
+
+- Chỉ Admin được tạo team.
+
+### GET /teams/{team}
+
+Trang chi tiết team. Route trả về Inertia page `TeamDetail`, gồm thông tin Lead hiện tại, members và options phục vụ form.
+
+Quyền:
+
+- Admin xem mọi team.
+- Lead xem team mình phụ trách.
+- Member thường xem team mình thuộc nếu cần.
+
+### DELETE /teams/{team}
+
+Admin xóa team. Khi xóa team, các user thuộc team này phải được set `team_id = null`.
+
+Quyền:
+
+- Chỉ Admin.
+
+### PATCH /teams/{team}/lead
+
+Admin gán hoặc gỡ Lead của team.
+
+Request gán Lead:
+
+```json
+{
+    "lead_id": "5"
+}
+```
+
+Request gỡ Lead:
+
+```json
+{
+    "lead_id": null
+}
+```
+
+Validation bắt buộc:
+
+- Chỉ Admin được gọi route này.
+- Nếu `lead_id` không null, user được chọn phải đang thuộc chính team này.
+- Lead không được tự gán hoặc đổi Lead khác.
+
+### POST /teams/{team}/members
+
+Admin hoặc Lead của team thêm member vào team.
+
+Request:
+
+```json
+{
+    "member_id": "8"
+}
+```
+
+Rule:
+
+- Admin có thể thêm bất kỳ active user nào.
+- Lead chỉ thêm member vào team mình phụ trách.
+- Mỗi member chỉ thuộc 0 hoặc 1 team. Khi thêm vào team mới, backend cập nhật `users.team_id` sang team mới.
+- Nếu member đang là Lead của team cũ, team cũ phải set `lead_id = null`.
+
+### DELETE /teams/{team}/members/{user}
+
+Admin hoặc Lead của team gỡ member khỏi team.
+
+Rule:
+
+- User bị gỡ phải đang thuộc team hiện tại.
+- Nếu user bị gỡ là Lead hiện tại của team, set `teams.lead_id = null`.
+
+### POST /teams/{team}/invites
+
+Admin hoặc Lead của team mời member tham gia team.
+
+Request:
+
+```json
+{
+    "email": "member@example.com"
+}
+```
+
+Ghi chú MVP:
+
+- Nếu chưa có hệ thống email/invite token, controller có thể validate và trả flash message để UI sẵn sàng, chưa gửi email thật.
+
+### GET /teams/members
+
+Tab quản lý members trong khu vực Teams. Route trả về Inertia page hoặc cùng page `TeamList` với tab `members`.
+
+Query gợi ý:
+
+- `page`
+- `limit`
+- `role`
+- `status`
+- `team_id`
+- `keyword`
+
+Quyền:
+
+- Admin xem toàn bộ members.
+- Lead xem members thuộc team mình phụ trách.
+- Member thường không có quyền quản lý.
+
+Ghi chú điều hướng: sidebar chỉ có menu `Teams`. Trong trang Teams có tabs `Teams` và `Members`; không dùng menu sidebar riêng tên `Members`.
+
 ### GET /users
 
-Admin lấy danh sách người dùng. Có thể dùng để chọn sales khi assign lead.
+Admin lấy danh sách người dùng. Có thể dùng để chọn sales khi assign lead hoặc chọn member khi thêm vào team. Với UI mới, route này nên được xem là data/support route, không phải page chính trong sidebar.
 
 ### GET /users/sales
 
@@ -280,6 +422,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reports/overview', [ReportController::class, 'overview'])->name('reports.overview');
     Route::get('/reports/campaigns', [ReportController::class, 'campaigns'])->name('reports.campaigns');
     Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+
+    Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
+    Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
+    Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
+    Route::delete('/teams/{team}', [TeamController::class, 'destroy'])->name('teams.destroy');
+    Route::patch('/teams/{team}/lead', [TeamController::class, 'updateLead'])->name('teams.lead.update');
+    Route::post('/teams/{team}/members', [TeamController::class, 'addMember'])->name('teams.members.store');
+    Route::delete('/teams/{team}/members/{user}', [TeamController::class, 'removeMember'])->name('teams.members.destroy');
+    Route::post('/teams/{team}/invites', [TeamController::class, 'invite'])->name('teams.invites.store');
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/sales', [UserController::class, 'sales'])->name('users.sales');

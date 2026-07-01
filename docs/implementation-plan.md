@@ -13,18 +13,19 @@ Nguyên tắc làm việc:
 
 ## Phân chia trách nhiệm
 
-| Hạng mục                | Codex làm                                       | Người viết dự án làm                                 |
-| ----------------------- | ----------------------------------------------- | ---------------------------------------------------- |
-| Cài đặt Laravel + React | Tạo/sửa boilerplate, cấu hình Vite, mount React | Kiểm tra chạy local                                  |
-| Database                | Tạo migration, model, relationship cơ bản       | Chỉnh field theo yêu cầu thật                        |
-| Auth                    | Tạo route/controller/middleware khung           | Chốt rule đăng nhập, role, seed user                 |
-| Campaign                | CRUD boilerplate                                | Viết rule campaign, validate chi tiết                |
-| Lead                    | CRUD boilerplate, filter cơ bản                 | Viết core xử lý lead, trạng thái, rule trùng dữ liệu |
-| Assign lead             | Tạo route/controller/action khung               | Chốt ai được assign, khi nào đổi trạng thái          |
-| Activity/note           | Tạo model, migration, route cơ bản              | Chốt loại activity và nội dung lưu                   |
-| Dashboard/report        | Tạo query/report cơ bản                         | Chỉnh công thức, số liệu cần hiển thị                |
-| React UI                | Tạo layout, page, form, table cơ bản            | Chỉnh flow, text, style và trải nghiệm dùng thật     |
-| Test                    | Tạo test mẫu nếu cần                            | Bổ sung case nghiệp vụ quan trọng                    |
+| Hạng mục                | Codex làm                                               | Người viết dự án làm                                 |
+| ----------------------- | ------------------------------------------------------- | ---------------------------------------------------- |
+| Cài đặt Laravel + React | Tạo/sửa boilerplate, cấu hình Vite, mount React         | Kiểm tra chạy local                                  |
+| Database                | Tạo migration, model, relationship cơ bản               | Chỉnh field theo yêu cầu thật                        |
+| Auth                    | Tạo route/controller/middleware khung                   | Chốt rule đăng nhập, role, seed user                 |
+| Team/Member             | Tạo schema, policy, Form Request, controller và UI tabs | Chốt quy trình mời member và rule vận hành team      |
+| Campaign                | CRUD boilerplate                                        | Viết rule campaign, validate chi tiết                |
+| Lead                    | CRUD boilerplate, filter cơ bản                         | Viết core xử lý lead, trạng thái, rule trùng dữ liệu |
+| Assign lead             | Tạo route/controller/action khung                       | Chốt ai được assign, khi nào đổi trạng thái          |
+| Activity/note           | Tạo model, migration, route cơ bản                      | Chốt loại activity và nội dung lưu                   |
+| Dashboard/report        | Tạo query/report cơ bản                                 | Chỉnh công thức, số liệu cần hiển thị                |
+| React UI                | Tạo layout, page, form, table cơ bản                    | Chỉnh flow, text, style và trải nghiệm dùng thật     |
+| Test                    | Tạo test mẫu nếu cần                                    | Bổ sung case nghiệp vụ quan trọng                    |
 
 ## [x] Phase 1 - Chuẩn bị project
 
@@ -106,6 +107,58 @@ Ghi chú Phase 2: chưa tạo bảng `lead_assignments` riêng vì MVP đang lư
     - [ ] Sales được làm gì.
 - [ ] Chỉnh redirect sau login.
 - [ ] Chỉnh thông báo lỗi đăng nhập.
+
+## [x] Phase 3.5 - Team/Member module
+
+### Codex sẽ làm
+
+- [x] Tạo migration:
+    - [x] `teams`
+    - [x] thêm `team_id` nullable vào `users`
+- [x] Tạo model và relationship:
+    - [x] `Team belongsTo User as lead`
+    - [x] `Team belongsTo User as creator`
+    - [x] `Team hasMany User as members`
+    - [x] `User belongsTo Team`
+    - [x] `User hasMany Team as leadingTeams`
+    - [x] `User hasMany Team as createdTeams`
+- [x] Tạo `TeamPolicy`:
+    - [x] Admin full quyền trên mọi team.
+    - [x] Team Lead chỉ quản lý member trong team mình phụ trách.
+    - [x] Member thường không có quyền quản lý.
+- [x] Tạo Form Request riêng:
+    - [x] `StoreTeamRequest`
+    - [x] `UpdateTeamLeadRequest`
+    - [x] `AddTeamMemberRequest`
+    - [x] `RemoveTeamMemberRequest`
+    - [x] `InviteTeamMemberRequest`
+- [x] Tạo `TeamController` và routes trong `routes/web.php`:
+    - [x] `GET /teams`
+    - [x] `POST /teams`
+    - [x] `GET /teams/{team}`
+    - [x] `DELETE /teams/{team}`
+    - [x] `PATCH /teams/{team}/lead`
+    - [x] `POST /teams/{team}/members`
+    - [x] `DELETE /teams/{team}/members/{user}`
+    - [x] `POST /teams/{team}/invites`
+- [x] Tạo React UI:
+    - [x] Sidebar dùng menu `Teams`, không dùng menu `Members` riêng.
+    - [x] Trang Teams có tabs `Teams` và `Members`.
+    - [x] Tab Teams hiển thị danh sách team, tạo/xóa team theo quyền Admin.
+    - [x] Team detail hiển thị Lead hoặc trạng thái chưa có Lead.
+    - [x] Admin có UI gán/gỡ Lead từ member đang thuộc team.
+    - [x] Admin hoặc Team Lead có UI thêm/xóa/mời member trong phạm vi quyền.
+    - [x] Tab Members quản lý members trong khu vực Teams.
+
+Ghi chú thiết kế: dùng `teams.lead_id` để lưu Team Lead optional và `users.team_id` để đảm bảo mỗi member chỉ thuộc 0 hoặc 1 team tại một thời điểm. Khi member chuyển team hoặc rời team mà đang là Team Lead, team cũ/current phải set `lead_id = null`, không tự chọn Lead mới.
+
+### Người viết dự án sẽ làm
+
+- [ ] Chốt nội dung invite thật:
+    - [ ] Chỉ flash message trong MVP.
+    - [ ] Hay gửi email/token thật ở phase sau.
+- [ ] Chốt Team Lead có được xem dữ liệu lead/campaign theo team hay chỉ quản lý member.
+- [ ] Chốt có cần giới hạn một user chỉ được lead tối đa một team hay không.
 
 ## [ ] Phase 4 - Campaign module
 

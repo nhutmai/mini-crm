@@ -66,6 +66,76 @@ sequenceDiagram
     Web-->>Manager: Hiển thị assign thành công
 ```
 
+## Luồng admin tạo team và gán Team Lead
+
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant Web as React trong Laravel
+    participant API as TeamController
+    participant Policy as TeamPolicy / FormRequest
+    participant DB as Database
+
+    Admin->>Web: Tạo team mới
+    Web->>API: POST /teams
+    API->>Policy: Kiểm tra user là Admin
+    API->>API: Validate name, description
+    API->>DB: Insert teams với lead_id null
+    DB-->>API: Team đã tạo
+    API-->>Web: Redirect back với flash success
+    Web-->>Admin: Hiển thị team mới
+
+    Admin->>Web: Thêm member vào team
+    Web->>API: POST /teams/{team}/members
+    API->>Policy: Kiểm tra Admin có quyền addMember
+    API->>DB: Nếu member là Lead team cũ, set team cũ lead_id null
+    API->>DB: Update users.team_id sang team mới
+    DB-->>API: Member đã thuộc team
+    API-->>Web: Redirect back với flash success
+
+    Admin->>Web: Chọn member làm Team Lead
+    Web->>API: PATCH /teams/{team}/lead
+    API->>Policy: Kiểm tra user là Admin
+    API->>API: Validate lead_id thuộc member của team
+    API->>DB: Update teams.lead_id
+    DB-->>API: Lead đã được gán
+    API-->>Web: Redirect back với flash success
+```
+
+## Luồng Team Lead quản lý member trong team
+
+```mermaid
+sequenceDiagram
+    actor Lead as Team Lead
+    participant Web as Teams / Members tab
+    participant API as TeamController
+    participant Policy as TeamPolicy / FormRequest
+    participant DB as Database
+
+    Lead->>Web: Mở chi tiết team mình phụ trách
+    Web->>API: GET /teams/{team}
+    API->>Policy: Kiểm tra Lead phụ trách team này
+    API->>DB: Lấy team, lead, members
+    DB-->>API: Team detail
+    API-->>Web: Inertia props
+
+    Lead->>Web: Thêm member vào team
+    Web->>API: POST /teams/{team}/members
+    API->>Policy: Kiểm tra addMember trong team mình lead
+    API->>DB: Nếu member là Lead team cũ, clear team cũ lead_id
+    API->>DB: Update users.team_id sang team hiện tại
+    DB-->>API: Member đã chuyển team
+    API-->>Web: Redirect back với flash success
+
+    Lead->>Web: Gỡ member khỏi team
+    Web->>API: DELETE /teams/{team}/members/{user}
+    API->>Policy: Kiểm tra removeMember trong team mình lead
+    API->>DB: Nếu user là Lead team hiện tại, set lead_id null
+    API->>DB: Update users.team_id null
+    DB-->>API: Member đã rời team
+    API-->>Web: Redirect back với flash success
+```
+
 ## Luồng sales cập nhật trạng thái lead
 
 ```mermaid
